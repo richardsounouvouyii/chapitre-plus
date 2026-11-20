@@ -1,0 +1,32 @@
+{
+  "exchanges": [
+    {
+      "name": "chapitre.events.v1",
+      "vhost": "/",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "chapitre.phase0.smoke",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "chapitre.events.v1",
+      "vhost": "/",
+      "destination": "chapitre.phase0.smoke",
+      "destination_type": "queue",
+      "routing_key": "phase0.smoke.v1",
+      "arguments": {}
+    }
+  ]
+}

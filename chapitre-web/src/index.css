@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  /* Couleurs de marque */
+  --color-primary: #0d47a1;
+  --color-primary-light: #1976d2;
+  --color-accent: #ffc107;
+
+  /* Arrière-plans */
+  --color-page: #f8fafc;
+  --color-soft-blue: #e3f2fd;
+  --color-surface: #ffffff;
+
+  /* Textes */
+  --color-heading: #071b49;
+  --color-body: #263238;
+
+  /* Bordures */
+  --color-border-light: #e2e8f0;
+
+  /* États */
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-warning: #d97706;
+}
+
+@plugin "daisyui" {
+  themes: chapitre --default;
+}
+
+@plugin "daisyui/theme" {
+  name: "chapitre";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #ffffff;
+  --color-base-200: #f8fafc;
+  --color-base-300: #e2e8f0;
+  --color-base-content: #263238;
+  --color-primary: #0d47a1;
+  --color-primary-content: #ffffff;
+  --color-secondary: #1976d2;
+  --color-secondary-content: #ffffff;
+  --color-accent: #ffc107;
+  --color-accent-content: #071b49;
+  --color-neutral: #071b49;
+  --color-neutral-content: #ffffff;
+  --color-info: #1976d2;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", "Candara", "Trebuchet MS", sans-serif;
+  background-color: var(--color-page);
+  color: var(--color-body);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-heading);
+}
+
+/* Animations légères (respecte prefers-reduced-motion) */
+@keyframes chapitre-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: chapitre-fade-up 0.55s ease-out both;
+}
+
+.animate-delay-1 {
+  animation-delay: 80ms;
+}
+.animate-delay-2 {
+  animation-delay: 160ms;
+}
+.animate-delay-3 {
+  animation-delay: 240ms;
+}
+.animate-delay-4 {
+  animation-delay: 320ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+}

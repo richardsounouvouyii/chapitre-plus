@@ -1,0 +1,42 @@
+name: chapitre-plus
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: chapitre-postgres
+    environment:
+      POSTGRES_USER: chapitre
+      POSTGRES_PASSWORD: chapitre_dev_change_me
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - chapitre_pg_data:/var/lib/postgresql/data
+      - ./postgres/init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chapitre -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: chapitre-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: chapitre
+      RABBITMQ_DEFAULT_PASS: chapitre_dev_change_me
+    ports:
+      # Hôtes 5673/15673 pour éviter le conflit avec d'autres stacks locales (ex. 5672 déjà pris)
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - chapitre_rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 12
+
+volumes:
+  chapitre_pg_data:
+  chapitre_rabbitmq_data:
