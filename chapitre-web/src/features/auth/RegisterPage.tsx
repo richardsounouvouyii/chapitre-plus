@@ -11,6 +11,7 @@ import {
   SCHOOL_OTHER_ID,
   schoolsForCity,
 } from './beninLocations'
+import { writeStudentMockSession } from '@/features/student/studentSession'
 import { PasswordStrengthBar } from './PasswordStrengthBar'
 
 const schema = z
@@ -83,15 +84,29 @@ export function RegisterPage() {
   }, [city, setValue])
 
   const onSubmit = (values: FormValues) => {
+    const schoolName = resolveSchoolName(values.city, values.schoolId, values.schoolOther)
+    writeStudentMockSession({
+      pendingGuardianLink: values.hasGuardian,
+      firstName: values.firstName.trim(),
+      lastName: values.lastName.trim(),
+      email: values.email,
+      level: values.level,
+      city: values.city,
+      schoolId: values.schoolId || undefined,
+      schoolName,
+      registeredAt: new Date().toISOString(),
+    })
     void navigate('/connexion', {
       state: {
         email: values.email,
         fromRegister: true,
         hasGuardian: values.hasGuardian,
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
         level: values.level,
         city: values.city,
         schoolId: values.schoolId || undefined,
-        schoolName: resolveSchoolName(values.city, values.schoolId, values.schoolOther),
+        schoolName,
       },
       replace: false,
     })

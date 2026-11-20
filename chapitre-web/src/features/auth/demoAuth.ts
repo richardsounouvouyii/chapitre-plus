@@ -1,13 +1,9 @@
 import type { Role } from '@/lib/roles'
 import { ROLE_LABELS, ROLES } from '@/lib/roles'
+import { APP_HOME_BY_ROLE } from '@/components/layout/app-shell/appNav'
 
 /** Routes mock des espaces connectés (auth réelle = Identity). */
-export const DEMO_ROLE_HOME: Record<Role, string> = {
-  STUDENT: '/app/eleve',
-  TRAINER: '/app/formateur',
-  PARENT: '/app/parent',
-  ADMIN: '/app/admin',
-}
+export const DEMO_ROLE_HOME: Record<Role, string> = { ...APP_HOME_BY_ROLE }
 
 /** Identifiants fictifs — préremplissent le formulaire en démo (DEV only). */
 export const DEMO_CREDENTIALS: Record<Role, { email: string; password: string }> = {

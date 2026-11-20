@@ -167,3 +167,26 @@ h4 {
     animation: none;
   }
 }
+
+/* Focus clavier — espaces app (sidebar / bottom nav) */
+.app-shell-focus:focus {
+  outline: none;
+}
+.app-shell-focus:focus-visible {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+}
+.app-shell-nav-link.is-active:focus-visible {
+  outline-color: #ffffff !important;
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+/* Contenu app : place pour la bottom nav mobile fixe */
+.app-shell-main {
+  padding-bottom: calc(var(--app-mobile-nav-h, 4.75rem) + 1.25rem);
+}
+@media (min-width: 1024px) {
+  .app-shell-main {
+    padding-bottom: 2rem;
+  }
+}

@@ -46,7 +46,57 @@ Tous les `.btn` (daisyUI) : `border-radius: 0` et sans bordure fantôme — past
 
 ## 2026-11-20 — Inscription : case parent / tuteur
 
-Sur `/inscription`, la case « J’ai un parent / tuteur » est collectée côté front (mock) et transmise à `/connexion` via `location.state`. Le lien parent réel + consentements mineurs seront traités par Identity (phase 1).
+Sur `/inscription`, la case « J’ai un parent / tuteur » est collectée côté front (mock) et transmise à `/connexion` via `location.state`, et persistée en `sessionStorage` (`chapitre.studentMock.v1`). Le dashboard élève affiche un bandeau « En attente de lien parent » si le flag est vrai. Le lien parent réel + consentements mineurs seront traités par Identity (phase 1).
+
+## 2026-11-20 — Shell élève (front-only)
+
+Nav élève : Accueil · Demandes · Séances · Ressources · Profil. Empty states FR ; mocks isolés dans `features/difficulties` et `features/bookings` (listes vides). Formulaire « nouvelle demande » reporté (page stub). Paiements élève hors nav primaire pour cette itération.
+
+## 2026-11-20 — Architecture layout app (`app-shell/`)
+
+Les espaces connectés ne vivent plus dans un seul `AppShell.tsx` monolithique :
+
+```text
+components/layout/
+  AppShell.tsx              # orchestration drawer + Outlet
+  AppPageHeader.tsx         # en-tête pages (tous rôles)
+  AppEmptyPanel.tsx         # empty state sobre
+  app-shell/
+    appNav.ts               # nav + home par rôle
+    AppSidebar.tsx
+    AppSidebarBrand.tsx     # logo → accueil rôle / refresh (pas /accueil public)
+    AppSidebarNav.tsx
+    AppSidebarFooter.tsx    # Retour au site + Déconnexion
+    AppMobileHeader.tsx
+    AppBottomNav.tsx
+```
+
+Logo sidebar = `/dashboard/<rôle>` (actualise si déjà dessus, `cursor-pointer`). « Retour au site » = bouton en bas de sidebar (`AppSidebarFooter`) → `/accueil` public. Anciennes URLs `/app/*` redirigées vers `/dashboard/*`.
+
+Dans l’espace élève, le CTA secondaire pointe vers **Mes séances** (`STUDENT_PATHS.seances`), pas vers le catalogue public `/catalogue` (réservé au site public, libellé « Séances »).
+
+Chemins centralisés dans `app-shell/appNav.ts` (`STUDENT_PATHS`, `TRAINER_PATHS`, …). Bottom nav mobile = barre **fixe** custom (onglets bordés, actif primary contrasté), pas daisyUI `btm-nav`.
+
+Formulaire élève « Nouvelle demande » : texte seul (classe, matière, chapitre, notion, préférences) ; stockage mock `sessionStorage` via `features/difficulties/mocks.ts`.
+
+Page **Séances** : mocks démo (`features/bookings/mocks.ts`) pour visualiser les états après validation formateur/admin — en attente parent, en attente paiement, confirmée.
+
+Page **Ressources** : mocks (`features/resources/`) — catégories PREPARATION/EXERCISE/SUMMARY/METHOD/CORRECTION ; téléchargement seulement si réservation confirmée **et** `visible_at` passé ; sinon verrouillé.
+
+## 2026-11-20 — Profil élève = miroir inscription (lecture seule)
+
+Le profil élève affiche les champs d’inscription (prénom, nom, e-mail, ville, établissement, classe, parent/tuteur, mot de passe masqué). **Pas de modification côté élève** — seul l’admin peut modifier un compte. Lien parent réel = Identity. Remplacement `sessionStorage` → profil JWT dès phase Identity+Catalog.
+
+## 2026-11-20 — Features séparées par rôle (pas un RoleDashboard unique)
+
+Chaque rôle a son dossier et son tableau de bord :
+
+- `features/student/` — parcours élève
+- `features/trainer/` — formateur (validation, séances, supports)
+- `features/parent/` — parent / tuteur (enfants, consentements, paiements)
+- `features/admin/` — admin (files de validation, tarifs, audit)
+
+Le layout partagé (`AppShell` / sidebar) reste commun ; le **contenu métier** ne se mutualise pas via un dashboard générique.
 
 ## 2026-11-20 — Inscription : ville + établissement
 

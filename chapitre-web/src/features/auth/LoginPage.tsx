@@ -8,6 +8,11 @@ import type { Role } from '@/lib/roles'
 import { ROLES } from '@/lib/roles'
 import { AuthShell } from './AuthShell'
 import {
+  ensureDemoStudentProfile,
+  readStudentMockSession,
+  writeStudentMockSession,
+} from '@/features/student/studentSession'
+import {
   DEMO_CREDENTIALS,
   DEMO_ROLE_ENTRIES,
   DEMO_ROLE_HOME,
@@ -32,7 +37,19 @@ const DEMO_ICONS: Record<Role, typeof GraduationCap> = {
   ADMIN: Shield,
 }
 
-type ConnexionLocationState = { email?: string; fromRegister?: boolean }
+type ConnexionLocationState = {
+  email?: string
+  fromRegister?: boolean
+  hasGuardian?: boolean
+  firstName?: string
+  lastName?: string
+  level?: string
+  city?: string
+  schoolId?: string
+  schoolName?: string
+  /** Redirection après garde auth (ex. /dashboard/eleve/…). */
+  from?: string
+}
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -88,8 +105,36 @@ export function LoginPage() {
     emailRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' })
   }
 
-  const onSubmit = (_values: FormValues) => {
-    void navigate(DEMO_ROLE_HOME[demoRole])
+  const onSubmit = (values: FormValues) => {
+    if (demoRole === ROLES.STUDENT) {
+      const existing = readStudentMockSession()
+      const email = values.email || registerState?.email || existing.email || ''
+      const cameFromRegister = Boolean(registerState?.fromRegister)
+      if (!cameFromRegister && !existing.firstName && !existing.lastName) {
+        ensureDemoStudentProfile(email || DEMO_CREDENTIALS.STUDENT.email)
+      } else {
+        writeStudentMockSession({
+          pendingGuardianLink:
+            registerState?.hasGuardian !== undefined
+              ? Boolean(registerState.hasGuardian)
+              : existing.pendingGuardianLink,
+          firstName: registerState?.firstName ?? existing.firstName,
+          lastName: registerState?.lastName ?? existing.lastName,
+          email: email || existing.email,
+          level: registerState?.level ?? existing.level,
+          city: registerState?.city ?? existing.city,
+          schoolId: registerState?.schoolId ?? existing.schoolId,
+          schoolName: registerState?.schoolName ?? existing.schoolName,
+          registeredAt: existing.registeredAt ?? new Date().toISOString(),
+        })
+      }
+    }
+    const redirectTo =
+      demoRole === ROLES.STUDENT &&
+      registerState?.from?.startsWith('/dashboard/eleve')
+        ? registerState.from
+        : DEMO_ROLE_HOME[demoRole]
+    void navigate(redirectTo)
   }
 
   const inputClass = [fieldClass, fieldsFlash ? 'animate-field-flash' : ''].filter(Boolean).join(' ')
