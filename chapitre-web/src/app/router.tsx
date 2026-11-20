@@ -11,6 +11,8 @@ import { HowItWorksPage } from '@/features/public/HowItWorksPage'
 import { LegalPage } from '@/features/public/LegalPage'
 import { PlaceholderPage } from '@/features/public/PlaceholderPage'
 import { SessionDetailPage } from '@/features/public/SessionDetailPage'
+import { TrainerProfilePage } from '@/features/public/TrainerProfilePage'
+import { TrainersPage } from '@/features/public/TrainersPage'
 import { ROLES } from '@/lib/roles'
 
 function Placeholder({ title }: { title: string }) {
@@ -36,15 +38,8 @@ export function AppRouter() {
           <Route path="catalogue" element={<CatalogPage />} />
           <Route path="catalogue/:sessionId" element={<SessionDetailPage />} />
           <Route path="mentions-legales" element={<LegalPage />} />
-          <Route
-            path="formateurs"
-            element={
-              <PlaceholderPage
-                title="Formateurs"
-                description="La page publique des formateurs vérifiés sera branchée après Trainer-service."
-              />
-            }
-          />
+          <Route path="formateurs" element={<TrainersPage />} />
+          <Route path="formateurs/:trainerId" element={<TrainerProfilePage />} />
           <Route
             path="centres"
             element={

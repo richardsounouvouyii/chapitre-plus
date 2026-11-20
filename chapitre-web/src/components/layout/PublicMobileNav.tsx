@@ -1,53 +1,95 @@
-import { CalendarDays, Home, PencilLine, UserRound } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { CalendarDays, GraduationCap, Home, UserRound } from 'lucide-react'
+import { useLayoutEffect, useRef } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
+import { isPublicAccountPath, PUBLIC_MOBILE_NAV } from './publicNav'
+import { scrollPublicToTop } from './scrollPublicToTop'
 
-const items = [
-  { to: '/accueil', label: 'Accueil', icon: Home, end: true },
-  { to: '/catalogue', label: 'Séances', icon: CalendarDays, end: false },
-  { to: '/inscription', label: 'Demande', icon: PencilLine, end: false },
-  { to: '/connexion', label: 'Compte', icon: UserRound, end: false },
-]
+const ICONS = {
+  '/accueil': Home,
+  '/catalogue': CalendarDays,
+  '/formateurs': GraduationCap,
+  '/connexion': UserRound,
+} as const
 
 /**
  * Barre fixe bas d’écran (mobile uniquement).
- * Actions les plus fréquentes : naviguer, voir séances, démarrer une demande, se connecter.
+ * Alignée sur les destinations header : Accueil · Séances · Formateurs · Compte.
  */
 export function PublicMobileNav() {
+  const navRef = useRef<HTMLElement>(null)
+  const { pathname } = useLocation()
+
+  useLayoutEffect(() => {
+    const node = navRef.current
+    if (!node) return
+
+    const apply = () => {
+      const height = Math.ceil(node.getBoundingClientRect().height)
+      document.documentElement.style.setProperty('--public-mobile-nav-h', `${height}px`)
+    }
+
+    apply()
+    const observer = new ResizeObserver(apply)
+    observer.observe(node)
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--public-mobile-nav-h')
+    }
+  }, [])
+
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-border-light bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      ref={navRef}
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-border-light bg-surface pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(15,23,42,0.06)] lg:hidden"
       aria-label="Navigation principale mobile"
     >
-      <ul className="mx-auto grid max-w-lg grid-cols-4">
-        {items.map(({ to, label, icon: Icon, end }) => (
-          <li key={to}>
-            <NavLink
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                cn(
-                  'flex flex-col items-center gap-0.5 px-1 py-2.5 text-[11px] font-medium transition',
-                  isActive ? 'text-primary' : 'text-body/55 hover:text-primary',
-                )
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <span
-                    className={cn(
-                      'flex size-9 items-center justify-center rounded-xl transition',
-                      isActive ? 'bg-soft-blue text-primary' : 'bg-transparent',
-                    )}
-                  >
-                    <Icon className="size-5" aria-hidden />
-                  </span>
-                  {label}
-                </>
-              )}
-            </NavLink>
-          </li>
-        ))}
+      <ul className="mx-auto grid max-w-lg grid-cols-4 gap-1 px-2 py-1.5">
+        {PUBLIC_MOBILE_NAV.map(({ to, label, end }) => {
+          const Icon = ICONS[to]
+          return (
+            <li key={to}>
+              <NavLink
+                to={to}
+                end={end}
+                aria-label={label}
+                onClick={() => scrollPublicToTop()}
+                className={({ isActive }) => {
+                  const active =
+                    to === '/connexion' ? isPublicAccountPath(pathname) : isActive
+                  return cn(
+                    'flex w-full flex-col items-center gap-0.5 rounded-xl px-1 py-2 text-[11px] font-semibold transition-colors',
+                    active
+                      ? 'bg-primary text-primary-content'
+                      : 'text-body/65 hover:bg-soft-blue hover:text-primary',
+                  )
+                }}
+              >
+                {({ isActive }) => {
+                  const active =
+                    to === '/connexion' ? isPublicAccountPath(pathname) : isActive
+                  return (
+                    <>
+                      <Icon
+                        className={cn('size-5', active ? 'text-primary-content' : 'text-current')}
+                        aria-hidden
+                        strokeWidth={active ? 2.5 : 2}
+                      />
+                      <span>{label}</span>
+                      <span
+                        className={cn(
+                          'mt-0.5 h-0.5 w-5 rounded-full',
+                          active ? 'bg-primary-content/90' : 'bg-transparent',
+                        )}
+                        aria-hidden
+                      />
+                    </>
+                  )
+                }}
+              </NavLink>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )

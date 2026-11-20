@@ -79,7 +79,7 @@ export function HomePage() {
           <div className="relative z-10 animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full bg-soft-blue px-3 py-1.5 text-sm font-medium text-primary">
               <GraduationCap className="size-4" aria-hidden />
-              3e et Terminale • Présentiel uniquement
+              3e et Terminale C·D • Présentiel uniquement
             </span>
 
             <h1 className="mt-5 text-4xl font-bold leading-[1.15] tracking-tight text-heading md:text-5xl lg:text-[3.25rem]">
@@ -100,7 +100,7 @@ export function HomePage() {
               </Link>
               <Link
                 to="/catalogue"
-                className="btn btn-outline btn-primary h-12 gap-2 rounded-xl border-primary/30 bg-surface px-5 text-base"
+                className="btn btn-outline btn-primary h-12 gap-2 rounded-xl px-5 text-base"
               >
                 <CalendarDays className="size-4" />
                 Voir les séances

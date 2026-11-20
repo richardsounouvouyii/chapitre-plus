@@ -1,9 +1,12 @@
 # catalog-service
 
-Service FastAPI indépendant — phase 0 (health/readiness uniquement).
+Service FastAPI indépendant — phase 0 + référentiel niveaux MVP.
 
 ## Base dédiée
 `chapitre_catalog`
+
+## Classes MVP
+`3e`, `Terminale C`, `Terminale D` — voir `app/domain/levels.py` et `GET /levels`.
 
 ## Lancer en local
 ```powershell

@@ -64,6 +64,49 @@ body {
   color: var(--color-body);
 }
 
+/* Boutons plats sans bordure (comme « Créer un compte ») */
+.btn,
+.btn:hover,
+.btn:focus,
+.btn:focus-visible,
+.btn:active,
+.btn:disabled {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  --btn-border: transparent !important;
+}
+.btn-primary {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-light) !important;
+  color: var(--color-primary-content) !important;
+}
+.btn-outline {
+  background-color: var(--color-soft-blue) !important;
+  color: var(--color-primary) !important;
+}
+.btn-outline:hover {
+  /* Contraste plus fort au survol (filtres inactifs, Se connecter) */
+  background-color: color-mix(in oklab, var(--color-primary) 22%, white) !important;
+  color: var(--color-heading) !important;
+}
+.btn-outline:focus-visible {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+}
+.btn-outline.btn-error {
+  background-color: color-mix(in oklab, var(--color-error) 12%, white) !important;
+  color: var(--color-error) !important;
+}
+.btn-outline.btn-error:hover {
+  background-color: color-mix(in oklab, var(--color-error) 18%, white) !important;
+  color: var(--color-error) !important;
+}
+
 h1,
 h2,
 h3,

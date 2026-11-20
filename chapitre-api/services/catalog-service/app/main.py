@@ -1,5 +1,8 @@
-"""catalog-service — squelette phase 0 (health uniquement)."""
+"""catalog-service — phase 0 + référentiel niveaux MVP."""
+
 from fastapi import FastAPI
+
+from app.api.levels import router as levels_router
 
 app = FastAPI(
     title="catalog-service",
@@ -7,6 +10,8 @@ app = FastAPI(
     docs_url="/docs",
     openapi_url="/openapi.json",
 )
+
+app.include_router(levels_router)
 
 
 @app.get("/health")

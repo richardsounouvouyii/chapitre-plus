@@ -4,15 +4,7 @@ import { createPortal } from 'react-dom'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import logo from '@/assets/logo_chapitre_plus.sm.webp'
 import { BeninFlag } from '@/components/ui/BeninFlag'
-
-const links = [
-  { to: '/accueil', label: 'Accueil' },
-  { to: '/catalogue', label: 'Séances' },
-  { to: '/formateurs', label: 'Formateurs' },
-  { to: '/centres', label: 'Centres' },
-  { to: '/comment-ca-marche', label: 'À propos' },
-  { to: '/aide', label: 'Aide' },
-]
+import { PUBLIC_HEADER_LINKS } from './publicNav'
 
 /** Délai avant d’accepter clic/scroll sur le voile (évite la fermeture du même tap qui ouvre). */
 const OVERLAY_ARM_MS = 280
@@ -110,7 +102,7 @@ export function PublicHeader() {
 
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal gap-0.5 px-1">
-              {links.map((link) => (
+              {PUBLIC_HEADER_LINKS.map((link) => (
                 <li key={link.to}>
                   <NavLink
                     to={link.to}
@@ -141,7 +133,7 @@ export function PublicHeader() {
 
             <Link
               to="/connexion"
-              className="btn btn-outline btn-primary btn-sm hidden border-primary/30 md:inline-flex"
+              className="btn btn-outline btn-primary btn-sm hidden md:inline-flex"
             >
               Se connecter
             </Link>
@@ -161,7 +153,7 @@ export function PublicHeader() {
             onClick={(event) => event.stopPropagation()}
           >
             <ul className="menu mx-auto max-w-7xl gap-0.5 px-3 py-3">
-              {links.map((link) => (
+              {PUBLIC_HEADER_LINKS.map((link) => (
                 <li key={link.to}>
                   <NavLink
                     to={link.to}

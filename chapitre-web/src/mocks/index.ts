@@ -1,1 +1,7 @@
-export { MOCK_SESSIONS, type MockSession } from './sessions'
+export {
+  MOCK_SESSIONS,
+  sessionCity,
+  sessionInDateRange,
+  type CatalogDateRange,
+  type MockSession,
+} from './sessions'
