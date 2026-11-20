@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { PublicLayout } from '@/components/layout/PublicLayout'
+import { DismissToastsOnNavigate } from '@/components/ui'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { RegisterPage } from '@/features/auth/RegisterPage'
 import { RoleDashboard } from '@/features/dashboards/RoleDashboard'
@@ -26,6 +27,7 @@ function Placeholder({ title }: { title: string }) {
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <DismissToastsOnNavigate />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route index element={<Navigate to="/accueil" replace />} />

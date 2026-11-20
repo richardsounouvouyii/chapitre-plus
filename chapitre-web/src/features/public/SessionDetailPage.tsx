@@ -1,5 +1,6 @@
 import { ArrowLeft, CalendarDays, MapPin } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
+import { ILLUSTRATIONS } from '@/assets/illustrations'
 import { AlertBanner, EmptyState, StatusBadge, useToast } from '@/components/ui'
 import { MOCK_SESSIONS } from '@/mocks'
 
@@ -12,7 +13,8 @@ export function SessionDetailPage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-12">
         <EmptyState
-          icon={CalendarDays}
+          illustration={ILLUSTRATIONS.calendrier}
+          illustrationAlt="Illustration — calendrier"
           title="Séance introuvable"
           description="Cette séance n’existe pas dans les données mock actuelles."
         />

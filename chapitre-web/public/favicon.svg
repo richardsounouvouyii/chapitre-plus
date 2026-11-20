@@ -1,26 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CHAPITRE+">
   <rect width="64" height="64" rx="14" fill="#0D47A1"/>
-  <!-- Livre ouvert -->
+  <!-- Pages du livre -->
   <path
-    d="M12 40c6.5-4.5 12-5.5 20-5.5S45.5 35.5 52 40v3.5c-6.5-4-12-4.8-20-4.8S18.5 39.5 12 43.5V40z"
+    d="M14 28.5c6.2-3.8 11.4-4.6 18-4.6s11.8.8 18 4.6v14.2c-6.2-3.6-11.4-4.3-18-4.3s-11.8.7-18 4.3V28.5z"
     fill="#E3F2FD"
   />
   <path
-    d="M32 34.5c-8 0-13.5 1-20 5.5v-16c6.5-4.2 12-5.2 20-5.2s13.5 1 20 5.2v16c-6.5-4.5-12-5.5-20-5.5z"
+    d="M32 24c-6.6 0-11.8.8-18 4.6V18.8C20.2 15.2 25.4 14 32 14s11.8 1.2 18 4.8v9.8C43.8 24.8 38.6 24 32 24z"
     fill="#FFFFFF"
   />
-  <path d="M32 18.8v21.2" stroke="#0D47A1" stroke-width="2" stroke-linecap="round"/>
-  <!-- Arc accent livre -->
+  <path d="M32 14.5v24.2" stroke="#0D47A1" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Base jaune du livre -->
   <path
-    d="M34 42.5c5.5.4 10.5 1.8 16 4.8"
+    d="M33.5 42.8c5.8.5 11 2 16.8 5"
     fill="none"
     stroke="#FFC107"
-    stroke-width="3.5"
+    stroke-width="3.2"
     stroke-linecap="round"
   />
-  <!-- Mortier / toque -->
-  <path d="M18 22.5 32 15l14 7.5-14 6.5L18 22.5z" fill="#071B49"/>
-  <path d="M20.5 23.5v7.2c0 2.8 5 5 11.5 5s11.5-2.2 11.5-5v-7.2" fill="#0D47A1"/>
-  <circle cx="46" cy="22.5" r="2.2" fill="#FFC107"/>
-  <path d="M46 24.5v10" stroke="#FFC107" stroke-width="2" stroke-linecap="round"/>
+  <!-- Toque -->
+  <path d="M19 21.2 32 14.2l13 7-13 6.2-13-6.2z" fill="#071B49"/>
+  <path d="M21.2 22.2v6.4c0 2.5 4.7 4.5 10.8 4.5s10.8-2 10.8-4.5v-6.4" fill="#1565C0"/>
+  <!-- Pompon -->
+  <circle cx="45.2" cy="21.2" r="2" fill="#FFC107"/>
+  <path d="M45.2 23v8.5" stroke="#FFC107" stroke-width="1.8" stroke-linecap="round"/>
 </svg>

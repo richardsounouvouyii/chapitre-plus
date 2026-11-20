@@ -3,10 +3,10 @@ import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 const STYLES = {
-  info: { className: 'alert-info', Icon: Info },
-  success: { className: 'alert-success', Icon: CheckCircle2 },
-  warning: { className: 'alert-warning', Icon: AlertTriangle },
-  error: { className: 'alert-error', Icon: AlertCircle },
+  info: { className: 'alert-info text-info-content', Icon: Info },
+  success: { className: 'alert-success text-success-content', Icon: CheckCircle2 },
+  warning: { className: 'alert-warning text-warning-content', Icon: AlertTriangle },
+  error: { className: 'alert-error text-error-content', Icon: AlertCircle },
 } as const
 
 export type AlertTone = keyof typeof STYLES

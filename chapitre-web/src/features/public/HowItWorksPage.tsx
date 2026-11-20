@@ -1,21 +1,25 @@
-import { CalendarDays, CheckCircle2, FileText, Users } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { ILLUSTRATIONS } from '@/assets/illustrations'
 
 const steps = [
   {
     title: 'Décrivez votre difficulté',
     text: 'Niveau, matière, chapitre, notion et disponibilités — uniquement du texte, aucun fichier à envoyer.',
-    Icon: FileText,
+    image: ILLUSTRATIONS.exercices,
+    imageAlt: 'Illustration — checklist et crayon pour décrire une difficulté',
   },
   {
     title: 'Choisissez une séance',
     text: 'Un formateur vérifié propose une séance ; l’admin valide le tarif avant publication.',
-    Icon: CalendarDays,
+    image: ILLUSTRATIONS.calendrier,
+    imageAlt: 'Illustration — calendrier et horloge pour réserver une séance',
   },
   {
     title: 'Participez en présentiel',
     text: 'Séance physique en centre ou établissement, puis supports PDF/images pour les inscrits autorisés.',
-    Icon: Users,
+    image: ILLUSTRATIONS.coursCollectif,
+    imageAlt: 'Photo — séance de renforcement scolaire en présentiel',
   },
 ]
 
@@ -23,27 +27,43 @@ export function HowItWorksPage() {
   return (
     <div className="bg-page">
       <div className="bg-soft-blue/50">
-        <div className="mx-auto max-w-3xl px-4 py-12 md:px-6">
-          <h1 className="text-3xl font-bold tracking-tight text-heading md:text-4xl">
-            Comment ça fonctionne
-          </h1>
-          <div className="mt-3 h-1 w-16 rounded-full bg-primary" />
-          <p className="mt-4 text-body/80">
-            CHAPITRE+ organise le renforcement scolaire <strong>en présentiel</strong>. Aucun cours
-            vidéo, quiz en ligne ou devoir remis sur la plateforme.
-          </p>
+        <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-[1.1fr_0.9fr] md:px-6 md:py-14">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-heading md:text-4xl">
+              Comment ça fonctionne
+            </h1>
+            <div className="mt-3 h-1 w-16 rounded-full bg-primary" />
+            <p className="mt-4 max-w-xl text-body/80">
+              CHAPITRE+ organise le renforcement scolaire <strong>en présentiel</strong>. Aucun
+              cours vidéo, quiz en ligne ou devoir remis sur la plateforme.
+            </p>
+          </div>
+          <img
+            src={ILLUSTRATIONS.livresDiplome}
+            alt="Illustration — livres et toque de diplomation"
+            width={320}
+            height={320}
+            className="mx-auto w-full max-w-[280px] object-contain drop-shadow-sm md:max-w-[320px]"
+            decoding="async"
+          />
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl space-y-4 px-4 py-10 md:px-6">
+      <div className="mx-auto max-w-5xl space-y-5 px-4 py-10 md:px-6">
         {steps.map((step, index) => (
           <article
             key={step.title}
-            className="flex gap-4 rounded-2xl border border-border-light bg-surface p-5 shadow-sm"
+            className="grid items-center gap-4 rounded-2xl border border-border-light bg-surface p-5 shadow-sm sm:grid-cols-[140px_1fr] sm:gap-6 md:p-6"
           >
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-soft-blue text-primary">
-              <step.Icon className="size-6" />
-            </div>
+            <img
+              src={step.image}
+              alt={step.imageAlt}
+              width={140}
+              height={140}
+              className="mx-auto size-[120px] object-contain sm:size-[140px]"
+              decoding="async"
+              loading="lazy"
+            />
             <div>
               <div className="flex items-center gap-2">
                 <span className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-content">
@@ -51,7 +71,7 @@ export function HowItWorksPage() {
                 </span>
                 <h2 className="text-lg font-bold text-heading">{step.title}</h2>
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-body/75">{step.text}</p>
+              <p className="mt-2 text-sm leading-relaxed text-body/75 md:text-base">{step.text}</p>
             </div>
           </article>
         ))}

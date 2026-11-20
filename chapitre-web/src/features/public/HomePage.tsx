@@ -11,7 +11,9 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import heroStudents from '@/assets/01_photo_accueil_eleves.jpg'
+import heroStudents640 from '@/assets/01_photo_accueil_eleves-640.webp'
+import heroStudents960 from '@/assets/01_photo_accueil_eleves-960.webp'
+import heroStudents1280 from '@/assets/01_photo_accueil_eleves-1280.webp'
 import { SkeletonCard } from '@/components/ui'
 
 const features = [
@@ -111,9 +113,15 @@ export function HomePage() {
             <div className="absolute -bottom-4 -right-4 size-28 rounded-full bg-accent/30 blur-xl" />
             <div className="relative overflow-hidden rounded-[2rem] shadow-[0_20px_50px_-20px_rgba(13,71,161,0.45)] ring-1 ring-border-light transition duration-500 hover:shadow-[0_24px_60px_-18px_rgba(13,71,161,0.55)]">
               <img
-                src={heroStudents}
+                src={heroStudents960}
+                srcSet={`${heroStudents640} 640w, ${heroStudents960} 960w, ${heroStudents1280} 1280w`}
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 560px"
+                width={960}
+                height={532}
                 alt="Élèves en révision en présentiel"
                 className="aspect-[4/3] w-full object-cover"
+                decoding="async"
+                fetchPriority="high"
               />
               <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-primary/25 to-transparent" />
             </div>

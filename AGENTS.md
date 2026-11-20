@@ -3,6 +3,16 @@
 ## Mission
 Créer une véritable application React responsive de renforcement scolaire en présentiel, destinée aux élèves de troisième et de terminale au Bénin. Respecter `CHAPITRE_PLUS_Cahier_des_charges_Microservices.md` (métier) et ce fichier (exécution microservices). Interface en français ; code de production, pas seulement des maquettes.
 
+## Réponses agent — recommandations obligatoires (chaque échange)
+À **chaque** question ou demande de l'utilisateur, après avoir répondu / livré le travail, l'agent **doit toujours** terminer par une section **Recommandations** (même hors fin de phase).
+
+Règles :
+- Minimum **3** pistes concrètes et actionnables, adaptées au sujet du message (pas de generic filler).
+- Couvrir au moins 2 dimensions parmi : technique, architecture, sécurité / mineurs / audit, observabilité, produit / UX, dette / risques, perf, tests.
+- Ce sont des **suggestions à valider** avec l'utilisateur — **ne pas les implémenter** tant qu'il n'a pas demandé de les faire.
+- Format court et lisible (liste à puces). Titre de section : `### Recommandations`.
+- Exception : refus de sécurité / contenu interdit — pas de recommandations d'attaque ou de contournement.
+
 ## Règle impérative d'architecture
 L'architecture est **microservices dès le démarrage**, avec **FastAPI + RabbitMQ + PostgreSQL**, et NON monolithe modulaire. Chaque domaine doit être séparé par un service FastAPI, une image Docker, son modèle de données, ses migrations et sa documentation. Un service est propriétaire exclusif de ses données : **interdiction d'accéder directement aux tables d'un autre service**, d'importer son ORM ou de créer des FK entre bases. Utiliser des API REST synchrones pour les requêtes qui nécessitent immédiatement une réponse, et RabbitMQ pour les événements métier asynchrones. Ne pas découper par écran/table ; respecter les frontières ci-dessous.
 
@@ -263,12 +273,12 @@ Chaque phase : modifier uniquement les services concernés, lancer tests et smok
    - produit / UX (écran manquant, empty state, accessibilité) ;
    - dette et risques si on reporte.
 
-Les recommandations sont des **suggestions à valider avec l'utilisateur**, pas des implémentations automatiques. Elles servent à étendre le projet progressivement sans improviser.
+Les recommandations de fin de phase complètent (sans remplacer) la règle « Recommandations obligatoires » de chaque échange. Toujours des **suggestions à valider**, jamais des implémentations automatiques.
 
 ## Sources de vérité (emplacement)
 - Ce fichier `AGENTS.md` et `CHAPITRE_PLUS_Cahier_des_charges_Microservices.md` vivent **à la racine** du monorepo `chapitre-plus/`.
 - Ne pas les déplacer dans `chapitre-api/` ni dans un sous-service : Cursor et l'équipe lisent la racine en premier.
-- En cas de conflit : le cahier prime sur le **métier** (parcours, RG, écrans) ; `AGENTS.md` prime sur l'**exécution** (dossiers `*-service`, 1 base/service, phases Cursor, outbox, recommandations de fin de phase).
+- En cas de conflit : le cahier prime sur le **métier** (parcours, RG, écrans) ; `AGENTS.md` prime sur l'**exécution** (dossiers `*-service`, 1 base/service, phases Cursor, outbox, recommandations à chaque échange et en fin de phase).
 - `chapitre-web/` = front. `chapitre-api/` = backend (gateway + `services/*`). Ne pas reconstruire un monolithe unique dans `chapitre-api/`.
 
 ## Première commande Cursor

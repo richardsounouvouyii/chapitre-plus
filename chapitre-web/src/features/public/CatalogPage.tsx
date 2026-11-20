@@ -1,45 +1,42 @@
+import { useQuery } from '@tanstack/react-query'
 import { MapPin, RefreshCw, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AlertBanner, SkeletonCard, StatusBadge, useToast } from '@/components/ui'
-import { MOCK_SESSIONS } from '@/mocks'
+import { isCatalogInteractionsLocked } from './catalogLock'
+import { CATALOG_SESSIONS_QUERY_KEY, fetchCatalogSessions } from './fetchCatalogSessions'
 
 export function CatalogPage() {
-  const { pushToast } = useToast()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { pushToast, hasActiveToast } = useToast()
 
-  useEffect(() => {
-    setLoading(true)
-    setError(null)
-    const timer = window.setTimeout(() => {
-      // Simulation chargement API — remplacer par TanStack Query + scheduling-service.
-      setLoading(false)
-      pushToast({
-        tone: 'success',
-        title: 'Catalogue chargé',
-        message: 'Séances mock prêtes à parcourir.',
-        durationMs: 3200,
-      })
-    }, 900)
-    return () => window.clearTimeout(timer)
-  }, [pushToast])
+  const {
+    data: sessions = [],
+    isPending,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: CATALOG_SESSIONS_QUERY_KEY,
+    queryFn: ({ signal }) => fetchCatalogSessions(signal),
+  })
 
-  const reload = () => {
-    setLoading(true)
-    setError(null)
-    window.setTimeout(() => {
-      setLoading(false)
+  const interactionsLocked = isCatalogInteractionsLocked(isFetching, hasActiveToast)
+  const showSkeletons = isPending && sessions.length === 0
+
+  const reload = async () => {
+    if (interactionsLocked) return
+    const result = await refetch()
+    if (result.isSuccess) {
       pushToast({
         tone: 'info',
         title: 'Actualisé',
         message: 'Liste des séances mise à jour (mock).',
       })
-    }, 700)
+    }
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 md:px-8">
+    <div className="mx-auto max-w-6xl px-4 py-12 md:px-8" aria-busy={interactionsLocked}>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Catalogue des séances</h1>
@@ -49,20 +46,22 @@ export function CatalogPage() {
             — branchées à l’API scheduling plus tard.
           </p>
         </div>
-        <button type="button" className="btn btn-outline btn-sm gap-2" onClick={reload} disabled={loading}>
-          <RefreshCw className={loading ? 'size-4 animate-spin' : 'size-4'} />
+        <button
+          type="button"
+          className="btn btn-outline btn-sm gap-2"
+          onClick={() => {
+            void reload()
+          }}
+          disabled={interactionsLocked}
+        >
+          <RefreshCw className={isFetching ? 'size-4 animate-spin' : 'size-4'} />
           Actualiser
         </button>
       </div>
 
-      {error ? (
-        <AlertBanner
-          tone="error"
-          title="Impossible de charger le catalogue"
-          className="mt-6"
-          onClose={() => setError(null)}
-        >
-          {error}
+      {isError ? (
+        <AlertBanner tone="error" title="Impossible de charger le catalogue" className="mt-6">
+          {error instanceof Error ? error.message : 'Erreur inconnue'}
         </AlertBanner>
       ) : (
         <AlertBanner tone="info" title="Mode démonstration" className="mt-6">
@@ -71,10 +70,17 @@ export function CatalogPage() {
         </AlertBanner>
       )}
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {loading
+      <div
+        className={[
+          'mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3',
+          interactionsLocked && !showSkeletons ? 'pointer-events-none opacity-55' : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        {showSkeletons
           ? Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={index} />)
-          : MOCK_SESSIONS.map((session) => (
+          : sessions.map((session) => (
               <article
                 key={session.id}
                 className="flex flex-col rounded-box border border-base-300 bg-base-100 p-5"
@@ -100,12 +106,21 @@ export function CatalogPage() {
                 <p className="mt-1 text-lg font-semibold">
                   {session.priceXof.toLocaleString('fr-FR')} XOF
                 </p>
-                <Link
-                  to={`/catalogue/${session.id}`}
-                  className="btn btn-primary btn-sm mt-auto pt-4"
-                >
-                  Voir le détail
-                </Link>
+                {interactionsLocked ? (
+                  <span
+                    className="btn btn-primary btn-sm mt-auto pt-4 btn-disabled"
+                    aria-disabled="true"
+                  >
+                    Voir le détail
+                  </span>
+                ) : (
+                  <Link
+                    to={`/catalogue/${session.id}`}
+                    className="btn btn-primary btn-sm mt-auto pt-4"
+                  >
+                    Voir le détail
+                  </Link>
+                )}
               </article>
             ))}
       </div>

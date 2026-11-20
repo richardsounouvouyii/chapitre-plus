@@ -1,6 +1,6 @@
-import { Inbox } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ILLUSTRATIONS } from '@/assets/illustrations'
 import {
   AlertBanner,
   EmptyState,
@@ -86,7 +86,12 @@ export function RoleDashboard({ role }: RoleDashboardProps) {
         {loading ? (
           <SkeletonList count={3} />
         ) : (
-          <EmptyState icon={Inbox} title="Rien pour l’instant" description={hint.description} />
+          <EmptyState
+            illustration={ILLUSTRATIONS.exercices}
+            illustrationAlt="Illustration — checklist"
+            title="Rien pour l’instant"
+            description={hint.description}
+          />
         )}
       </section>
 

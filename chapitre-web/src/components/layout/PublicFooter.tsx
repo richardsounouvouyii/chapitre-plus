@@ -1,6 +1,6 @@
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import logo from '@/assets/02_logo_principal.png'
+import logo from '@/assets/logo_chapitre_plus.sm.webp'
 import { BeninFlag } from '@/components/ui/BeninFlag'
 
 const cities = ['Cotonou', 'Porto-Novo', 'Parakou', 'Abomey-Calavi', 'Bohicon']
@@ -14,7 +14,7 @@ export function PublicFooter() {
             <img
               src={logo}
               alt="CHAPITRE+"
-              className="h-9 w-auto max-w-[180px] rounded-md bg-surface object-contain object-left p-1"
+              className="h-14 w-auto max-w-[180px] rounded-lg bg-surface object-contain object-left p-1.5"
             />
             <p className="text-xs leading-snug text-primary-content/80 md:text-sm">
               Renforcement scolaire <strong>en présentiel</strong> — 3<sup>e</sup> et terminale au

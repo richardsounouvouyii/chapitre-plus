@@ -1,5 +1,5 @@
-import { Construction } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { ILLUSTRATIONS } from '@/assets/illustrations'
 import { EmptyState } from '@/components/ui'
 
 type PlaceholderPageProps = {
@@ -10,7 +10,12 @@ type PlaceholderPageProps = {
 export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 md:px-6">
-      <EmptyState icon={Construction} title={title} description={description} />
+      <EmptyState
+        illustration={ILLUSTRATIONS.livresDiplome}
+        illustrationAlt="Illustration — livres et toque"
+        title={title}
+        description={description}
+      />
       <div className="mt-8 flex justify-center gap-3">
         <Link to="/accueil" className="btn btn-primary rounded-xl">
           Retour à l’accueil
