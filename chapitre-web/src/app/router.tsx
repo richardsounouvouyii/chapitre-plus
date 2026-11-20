@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { DismissToastsOnNavigate } from '@/components/ui'
 import { LoginPage } from '@/features/auth/LoginPage'
@@ -58,6 +59,9 @@ export function AppRouter() {
               />
             }
           />
+        </Route>
+
+        <Route element={<AuthLayout />}>
           <Route path="connexion" element={<LoginPage />} />
           <Route path="inscription" element={<RegisterPage />} />
         </Route>

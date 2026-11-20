@@ -73,9 +73,11 @@ body {
 .btn:disabled {
   border: none !important;
   border-width: 0 !important;
+  border-radius: 0 !important;
   outline: none !important;
   box-shadow: none !important;
   --btn-border: transparent !important;
+  --border-btn: 0 !important;
 }
 .btn-primary {
   background-color: var(--color-primary) !important;
@@ -143,8 +145,25 @@ h4 {
   animation-delay: 320ms;
 }
 
+@keyframes chapitre-field-flash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  35%,
+  65% {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 55%, transparent);
+    border-color: var(--color-primary);
+  }
+}
+
+.animate-field-flash {
+  animation: chapitre-field-flash 0.9s ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-up {
+  .animate-fade-up,
+  .animate-field-flash {
     animation: none;
   }
 }

@@ -17,10 +17,10 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
         description={description}
       />
       <div className="mt-8 flex justify-center gap-3">
-        <Link to="/accueil" className="btn btn-primary rounded-xl">
+        <Link to="/accueil" className="btn btn-primary">
           Retour à l’accueil
         </Link>
-        <Link to="/catalogue" className="btn btn-outline btn-primary rounded-xl">
+        <Link to="/catalogue" className="btn btn-outline btn-primary">
           Voir les séances
         </Link>
       </div>

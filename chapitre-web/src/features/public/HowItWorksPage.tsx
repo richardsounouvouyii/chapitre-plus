@@ -90,10 +90,10 @@ export function HowItWorksPage() {
         </ul>
 
         <div className="flex flex-wrap gap-3 pt-2">
-          <Link to="/catalogue" className="btn btn-primary rounded-xl">
+          <Link to="/catalogue" className="btn btn-primary">
             Parcourir les séances
           </Link>
-          <Link to="/inscription" className="btn btn-outline btn-primary rounded-xl">
+          <Link to="/inscription" className="btn btn-outline btn-primary">
             Créer un compte
           </Link>
         </div>

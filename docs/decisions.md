@@ -32,3 +32,25 @@ Matière littéraire liée aux séries A/L : **retirée** des mocks formateurs t
 
 1. **Phase Identity+Catalog** : le front consomme `GET /levels` (catalog-service) et retire le miroir `curriculumLevels.ts` / `SUPPORTED_LEVELS` local.
 2. **Phase Scheduling (3)** : rejeter toute création de séance dont `level` ∉ `SUPPORTED_LEVELS` ; journaliser dans `audit_log` local.
+
+## 2026-11-20 — Comptes : élève self-service, autres via admin
+
+- **Élève** : inscription + connexion directe (formulaire public).
+- **Formateur / Parent / Admin** : compte créé par l’admin ; invitation par e-mail ; l’utilisateur définit son mot de passe à la première connexion (Identity).
+- **Démo front** : boutons « Accès démo » sur `/connexion` **uniquement si `import.meta.env.DEV`** (préremplissage e-mail/mot de passe + navigation mock).
+- **Production** : login réel via Identity uniquement — aucun compte fictif ni bloc Accès démo.
+
+## 2026-11-20 — Boutons UI : radius 0
+
+Tous les `.btn` (daisyUI) : `border-radius: 0` et sans bordure fantôme — pastilles / badges peuvent rester arrondis.
+
+## 2026-11-20 — Inscription : case parent / tuteur
+
+Sur `/inscription`, la case « J’ai un parent / tuteur » est collectée côté front (mock) et transmise à `/connexion` via `location.state`. Le lien parent réel + consentements mineurs seront traités par Identity (phase 1).
+
+## 2026-11-20 — Inscription : ville + établissement
+
+- **Ville** (obligatoire) : résidence de l’élève (référentiel démo `beninLocations.ts`).
+- **Établissement** (facultatif) : select filtré par ville + « Autre… » (texte libre).
+- L’établissement **ne limite pas** le lieu des séances : le catalogue affiche toujours le quartier (ex. Abomey-Calavi) et le filtre ville reste la source de vérité pour Cotonou vs Calavi.
+- Plus tard : préfiltre catalogue / zones préférées via Identity + Scheduling.

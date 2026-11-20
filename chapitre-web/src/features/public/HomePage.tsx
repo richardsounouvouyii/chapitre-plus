@@ -94,13 +94,13 @@ export function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link to="/inscription" className="btn btn-primary h-12 gap-2 rounded-xl px-5 text-base">
+              <Link to="/inscription" className="btn btn-primary h-12 gap-2 px-5 text-base">
                 <PencilLine className="size-4" />
-                Je n’ai pas compris un chapitre
+                Créer un compte élève
               </Link>
               <Link
                 to="/catalogue"
-                className="btn btn-outline btn-primary h-12 gap-2 rounded-xl px-5 text-base"
+                className="btn btn-outline btn-primary h-12 gap-2 px-5 text-base"
               >
                 <CalendarDays className="size-4" />
                 Voir les séances
@@ -205,7 +205,7 @@ export function HomePage() {
           </div>
 
           <div className="mt-10 flex justify-center">
-            <Link to="/comment-ca-marche" className="btn btn-primary rounded-xl px-6">
+            <Link to="/comment-ca-marche" className="btn btn-primary px-6">
               En savoir plus
             </Link>
           </div>
