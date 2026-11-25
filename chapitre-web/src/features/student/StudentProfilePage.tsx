@@ -1,5 +1,4 @@
 import {
-  ExternalLink,
   GraduationCap,
   KeyRound,
   Mail,
@@ -12,7 +11,7 @@ import {
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppEmptyPanel } from '@/components/layout/AppEmptyPanel'
-import { PUBLIC_SITE_HOME } from '@/components/layout/app-shell/appNav'
+import { SessionActionsPanel } from '@/components/layout/SessionActionsPanel'
 import { StatusBadge } from '@/components/ui'
 import {
   hydrateStudentProfile,
@@ -176,15 +175,7 @@ export function StudentProfilePage() {
             </dl>
           </section>
 
-          <div className="mt-2">
-            <Link
-              to={PUBLIC_SITE_HOME}
-              className="btn btn-outline btn-primary h-11 w-full gap-2 px-4 sm:w-auto"
-            >
-              <ExternalLink className="size-4" aria-hidden />
-              Retour au site
-            </Link>
-          </div>
+          <SessionActionsPanel />
         </div>
       ) : (
         <div className="mt-6">

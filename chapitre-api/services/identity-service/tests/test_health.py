@@ -13,7 +13,10 @@ def test_health() -> None:
     assert body["service"] == "identity-service"
 
 
-def test_ready() -> None:
+def test_ready_shape() -> None:
+    """/ready renvoie ready ou not_ready selon la DB — pas de crash."""
     response = client.get("/ready")
     assert response.status_code == 200
-    assert response.json()["status"] == "ready"
+    body = response.json()
+    assert body["service"] == "identity-service"
+    assert body["status"] in {"ready", "not_ready"}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chapitre.plus/contracts/events/identity.user.invited.v1.schema.json",
+  "title": "identity.user.invited.v1",
+  "description": "Invitation admin créée. Le jeton set-password N'EST PAS dans le payload (claim interne Identity).",
+  "type": "object",
+  "required": ["invitation_id", "user_id", "email", "role", "expires_at"],
+  "properties": {
+    "invitation_id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string", "format": "uuid" },
+    "email": { "type": "string", "format": "email" },
+    "role": { "type": "string", "enum": ["TRAINER", "PARENT", "ADMIN"] },
+    "expires_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

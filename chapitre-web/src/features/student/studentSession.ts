@@ -1,3 +1,5 @@
+import { notifyAuthSessionChanged } from '@/features/auth/authSessionEvents'
+
 const STORAGE_KEY = 'chapitre.studentMock.v1'
 
 export type StudentMockSession = {
@@ -64,6 +66,7 @@ export function writeStudentMockSession(patch: Partial<StudentMockSession>): Stu
   if (canUseStorage()) {
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next))
   }
+  notifyAuthSessionChanged()
   return next
 }
 
@@ -71,6 +74,7 @@ export function clearStudentMockSession(): void {
   if (canUseStorage()) {
     window.sessionStorage.removeItem(STORAGE_KEY)
   }
+  // Pas de notify ici : clearDemoAuthSession / writeDemoAuthSession notifient après.
 }
 
 export function studentDisplayName(session: StudentMockSession): string {

@@ -1,17 +1,20 @@
-"""catalog-service — phase 0 + référentiel niveaux MVP."""
+"""catalog-service — référentiels niveaux / matières / chapitres / notions."""
 
 from fastapi import FastAPI
 
-from app.api.levels import router as levels_router
+from app.api.admin import router as admin_router
+from app.api.catalog import router as catalog_router
+from app.infrastructure.database import check_database
 
 app = FastAPI(
     title="catalog-service",
-    version="0.1.0",
+    version="0.3.0",
     docs_url="/docs",
     openapi_url="/openapi.json",
 )
 
-app.include_router(levels_router)
+app.include_router(catalog_router)
+app.include_router(admin_router)
 
 
 @app.get("/health")
@@ -21,5 +24,6 @@ def health() -> dict[str, str]:
 
 @app.get("/ready")
 def ready() -> dict[str, str]:
-    # Phase 0 : readiness minimale (DB/métier branchés aux phases suivantes).
+    if not check_database():
+        return {"status": "not_ready", "service": "catalog-service", "reason": "database"}
     return {"status": "ready", "service": "catalog-service"}

@@ -18,8 +18,9 @@ export function AppSidebar({ role }: AppSidebarProps) {
         <AppSidebarBrand role={role} />
         <div className="min-h-0 flex-1 overflow-y-auto">
           <AppSidebarNav role={role} />
+          {/* Compte collé sous la nav (pas en bas de l’écran). */}
+          <AppSidebarFooter role={role} />
         </div>
-        <AppSidebarFooter role={role} />
       </aside>
     </div>
   )

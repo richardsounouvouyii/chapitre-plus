@@ -17,14 +17,17 @@ import { PlaceholderPage } from '@/features/public/PlaceholderPage'
 import { SessionDetailPage } from '@/features/public/SessionDetailPage'
 import { TrainerProfilePage } from '@/features/public/TrainerProfilePage'
 import { TrainersPage } from '@/features/public/TrainersPage'
-import { RequireStudentSession } from '@/features/student/RequireStudentSession'
+import { RequireRoleSession } from '@/features/auth/RequireRoleSession'
 import { StudentDashboard } from '@/features/student/StudentDashboard'
 import { StudentDifficultiesPage } from '@/features/student/StudentDifficultiesPage'
 import { StudentDifficultyFormPage } from '@/features/student/StudentDifficultyFormPage'
 import { StudentProfilePage } from '@/features/student/StudentProfilePage'
 import { StudentResourcesPage } from '@/features/student/StudentResourcesPage'
 import { StudentSessionsPage } from '@/features/student/StudentSessionsPage'
+import { RoleProfilePage } from '@/features/shared/RoleProfilePage'
+import { TrainerAvailabilityPage } from '@/features/trainer/TrainerAvailabilityPage'
 import { TrainerDashboard } from '@/features/trainer/TrainerDashboard'
+import { TrainerDossierPage } from '@/features/trainer/TrainerDossierPage'
 import { TrainerPlaceholderPage } from '@/features/trainer/TrainerPlaceholderPage'
 import { ROLES } from '@/lib/roles'
 
@@ -70,9 +73,9 @@ export function AppRouter() {
         <Route
           path="/dashboard/eleve"
           element={
-            <RequireStudentSession>
+            <RequireRoleSession role={ROLES.STUDENT}>
               <AppShell role={ROLES.STUDENT} />
-            </RequireStudentSession>
+            </RequireRoleSession>
           }
         >
           <Route index element={<StudentDashboard />} />
@@ -85,14 +88,23 @@ export function AppRouter() {
           <Route path="documents" element={<Navigate to="/dashboard/eleve/ressources" replace />} />
         </Route>
 
-        <Route path="/dashboard/formateur" element={<AppShell role={ROLES.TRAINER} />}>
+        <Route
+          path="/dashboard/formateur"
+          element={
+            <RequireRoleSession role={ROLES.TRAINER}>
+              <AppShell role={ROLES.TRAINER} />
+            </RequireRoleSession>
+          }
+        >
           <Route index element={<TrainerDashboard />} />
+          <Route path="dossier" element={<TrainerDossierPage />} />
+          <Route path="disponibilites" element={<TrainerAvailabilityPage />} />
           <Route
             path="seances"
             element={
               <TrainerPlaceholderPage
                 title="Séances formateur"
-                description="Création, disponibilités et suivi des séances en présentiel."
+                description="Création et suivi des séances en présentiel (lieux catalogue + tarif admin)."
               />
             }
           />
@@ -108,15 +120,23 @@ export function AppRouter() {
           <Route
             path="profil"
             element={
-              <TrainerPlaceholderPage
-                title="Profil formateur"
-                description="Dossier de validation, compétences et statut APPROVED / PENDING."
+              <RoleProfilePage
+                role={ROLES.TRAINER}
+                spaceEyebrow="Espace formateur"
+                description=""
               />
             }
           />
         </Route>
 
-        <Route path="/dashboard/parent" element={<AppShell role={ROLES.PARENT} />}>
+        <Route
+          path="/dashboard/parent"
+          element={
+            <RequireRoleSession role={ROLES.PARENT}>
+              <AppShell role={ROLES.PARENT} />
+            </RequireRoleSession>
+          }
+        >
           <Route index element={<ParentDashboard />} />
           <Route
             path="enfants"
@@ -136,9 +156,26 @@ export function AppRouter() {
               />
             }
           />
+          <Route
+            path="profil"
+            element={
+              <RoleProfilePage
+                role={ROLES.PARENT}
+                spaceEyebrow="Espace parent / tuteur"
+                description="Compte parent mock — consentements et enfants liés à brancher sur Identity."
+              />
+            }
+          />
         </Route>
 
-        <Route path="/dashboard/admin" element={<AppShell role={ROLES.ADMIN} />}>
+        <Route
+          path="/dashboard/admin"
+          element={
+            <RequireRoleSession role={ROLES.ADMIN}>
+              <AppShell role={ROLES.ADMIN} />
+            </RequireRoleSession>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route
             path="formateurs"
@@ -155,6 +192,16 @@ export function AppRouter() {
               <AdminPlaceholderPage
                 title="Séances admin"
                 description="Approbation des tarifs et supervision des séances publiées."
+              />
+            }
+          />
+          <Route
+            path="profil"
+            element={
+              <RoleProfilePage
+                role={ROLES.ADMIN}
+                spaceEyebrow="Espace administrateur"
+                description="Compte admin mock — audit et validations aux prochaines itérations."
               />
             }
           />

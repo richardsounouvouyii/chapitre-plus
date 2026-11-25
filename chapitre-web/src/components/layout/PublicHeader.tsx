@@ -1,9 +1,10 @@
 import { Menu, X } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type MouseEvent, type PointerEvent } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import logo from '@/assets/logo_chapitre_plus.sm.webp'
 import { BeninFlag } from '@/components/ui/BeninFlag'
+import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { PUBLIC_HEADER_LINKS } from './publicNav'
 
 /** Délai avant d’accepter clic/scroll sur le voile (évite la fermeture du même tap qui ouvre). */
@@ -14,7 +15,9 @@ export function PublicHeader() {
   const [overlayArmed, setOverlayArmed] = useState(false)
   const menuId = useId()
   const location = useLocation()
+  const navigate = useNavigate()
   const armTimerRef = useRef<number | null>(null)
+  const { session: active, clearSession } = useAuthSession()
 
   useEffect(() => {
     setMenuOpen(false)
@@ -31,7 +34,6 @@ export function PublicHeader() {
       return
     }
 
-    // Le voile ignore les événements pendant le tap d’ouverture
     setOverlayArmed(false)
     armTimerRef.current = window.setTimeout(() => {
       setOverlayArmed(true)
@@ -72,6 +74,12 @@ export function PublicHeader() {
     event.preventDefault()
     event.stopPropagation()
     setMenuOpen((open) => !open)
+  }
+
+  const logout = () => {
+    clearSession()
+    closeMenu()
+    void navigate('/accueil', { replace: true })
   }
 
   return (
@@ -131,15 +139,38 @@ export function PublicHeader() {
               <span>Bénin</span>
             </div>
 
-            <Link
-              to="/connexion"
-              className="btn btn-outline btn-primary btn-sm hidden md:inline-flex"
-            >
-              Se connecter
-            </Link>
-            <Link to="/inscription" className="btn btn-primary btn-sm hidden md:inline-flex">
-              Créer un compte
-            </Link>
+            {active ? (
+              <>
+                <span className="hidden max-w-[10rem] truncate text-xs text-body/60 lg:inline">
+                  {active.displayName}
+                </span>
+                <Link
+                  to={active.homePath}
+                  className="btn btn-primary btn-sm hidden md:inline-flex"
+                >
+                  Mon espace
+                </Link>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm hidden text-body/70 md:inline-flex"
+                  onClick={logout}
+                >
+                  Se déconnecter
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/connexion"
+                  className="btn btn-outline btn-primary btn-sm hidden md:inline-flex"
+                >
+                  Se connecter
+                </Link>
+                <Link to="/inscription" className="btn btn-primary btn-sm hidden md:inline-flex">
+                  Créer un compte
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -166,16 +197,37 @@ export function PublicHeader() {
                   </NavLink>
                 </li>
               ))}
-              <li className="mt-1 border-t border-border-light pt-2 md:hidden">
-                <NavLink to="/connexion" onClick={closeMenu}>
-                  Se connecter
-                </NavLink>
-              </li>
-              <li className="md:hidden">
-                <NavLink to="/inscription" className="font-semibold text-primary" onClick={closeMenu}>
-                  Créer un compte
-                </NavLink>
-              </li>
+              {active ? (
+                <>
+                  <li className="mt-1 border-t border-border-light pt-2 md:hidden">
+                    <NavLink to={active.homePath} onClick={closeMenu}>
+                      Mon espace ({active.roleLabel})
+                    </NavLink>
+                  </li>
+                  <li className="md:hidden">
+                    <button type="button" className="w-full text-left" onClick={logout}>
+                      Se déconnecter
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="mt-1 border-t border-border-light pt-2 md:hidden">
+                    <NavLink to="/connexion" onClick={closeMenu}>
+                      Se connecter
+                    </NavLink>
+                  </li>
+                  <li className="md:hidden">
+                    <NavLink
+                      to="/inscription"
+                      className="font-semibold text-primary"
+                      onClick={closeMenu}
+                    >
+                      Créer un compte
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         ) : null}

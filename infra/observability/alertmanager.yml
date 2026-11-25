@@ -1,0 +1,19 @@
+# Alertmanager — phase déploiement / profil observability.
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: chapitre-default
+  group_by: [alertname, service]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: chapitre-default
+    # Dev : webhook / logs. Prod : brancher Slack, e-mail, PagerDuty…
+    webhook_configs:
+      - url: "http://127.0.0.1:5001/chapitre-alerts"
+        send_resolved: true
+
+inhibit_rules: []

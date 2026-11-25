@@ -1,8 +1,10 @@
 import {
+  CalendarClock,
   CalendarDays,
   ClipboardList,
   FileText,
   Home,
+  ShieldCheck,
   UserRound,
   Wallet,
   type LucideIcon,
@@ -37,6 +39,8 @@ export const STUDENT_PATHS = {
 
 export const TRAINER_PATHS = {
   home: '/dashboard/formateur',
+  dossier: '/dashboard/formateur/dossier',
+  disponibilites: '/dashboard/formateur/disponibilites',
   seances: '/dashboard/formateur/seances',
   documents: '/dashboard/formateur/documents',
   profil: '/dashboard/formateur/profil',
@@ -46,12 +50,14 @@ export const PARENT_PATHS = {
   home: '/dashboard/parent',
   enfants: '/dashboard/parent/enfants',
   paiements: '/dashboard/parent/paiements',
+  profil: '/dashboard/parent/profil',
 } as const
 
 export const ADMIN_PATHS = {
   home: '/dashboard/admin',
   formateurs: '/dashboard/admin/formateurs',
   seances: '/dashboard/admin/seances',
+  profil: '/dashboard/admin/profil',
 } as const
 
 /** Accueil de l’espace connecté (logo sidebar) — pas le site public. */
@@ -72,6 +78,13 @@ export const APP_NAV_BY_ROLE: Record<Role, AppNavItem[]> = {
   ],
   [ROLES.TRAINER]: [
     { to: TRAINER_PATHS.home, label: 'Tableau de bord', shortLabel: 'Accueil', icon: Home },
+    { to: TRAINER_PATHS.dossier, label: 'Dossier', icon: ShieldCheck },
+    {
+      to: TRAINER_PATHS.disponibilites,
+      label: 'Disponibilités',
+      shortLabel: 'Dispo',
+      icon: CalendarClock,
+    },
     { to: TRAINER_PATHS.seances, label: 'Séances', icon: CalendarDays },
     { to: TRAINER_PATHS.documents, label: 'Documents', shortLabel: 'Docs', icon: FileText },
     { to: TRAINER_PATHS.profil, label: 'Profil', icon: UserRound },
@@ -80,16 +93,23 @@ export const APP_NAV_BY_ROLE: Record<Role, AppNavItem[]> = {
     { to: PARENT_PATHS.home, label: 'Tableau de bord', shortLabel: 'Accueil', icon: Home },
     { to: PARENT_PATHS.enfants, label: 'Enfants', icon: UserRound },
     { to: PARENT_PATHS.paiements, label: 'Paiements', icon: Wallet },
+    { to: PARENT_PATHS.profil, label: 'Profil', icon: UserRound },
   ],
   [ROLES.ADMIN]: [
     { to: ADMIN_PATHS.home, label: 'Vue d’ensemble', shortLabel: 'Accueil', icon: Home },
     { to: ADMIN_PATHS.formateurs, label: 'Formateurs', icon: UserRound },
     { to: ADMIN_PATHS.seances, label: 'Séances', icon: CalendarDays },
+    { to: ADMIN_PATHS.profil, label: 'Profil', icon: UserRound },
   ],
 }
 
 export function mobileNavItemsForRole(role: Role): AppNavItem[] {
-  return APP_NAV_BY_ROLE[role]
+  const items = APP_NAV_BY_ROLE[role]
+  // Bottom nav : max ~5 items. Documents reste accessible via sidebar / CTA accueil.
+  if (role === ROLES.TRAINER) {
+    return items.filter((item) => item.to !== TRAINER_PATHS.documents)
+  }
+  return items
 }
 
 export function isAppNavEnd(to: string): boolean {

@@ -1,12 +1,18 @@
-"""scheduling-service — squelette phase 0 (health uniquement)."""
+"""scheduling-service — lieux, séances, tarifs, publications."""
+
 from fastapi import FastAPI
+
+from app.api.scheduling import router as scheduling_router
+from app.infrastructure.database import check_database
 
 app = FastAPI(
     title="scheduling-service",
-    version="0.1.0",
+    version="0.2.0",
     docs_url="/docs",
     openapi_url="/openapi.json",
 )
+
+app.include_router(scheduling_router)
 
 
 @app.get("/health")
@@ -16,5 +22,10 @@ def health() -> dict[str, str]:
 
 @app.get("/ready")
 def ready() -> dict[str, str]:
-    # Phase 0 : readiness minimale (DB/métier branchés aux phases suivantes).
+    if not check_database():
+        return {
+            "status": "not_ready",
+            "service": "scheduling-service",
+            "reason": "database",
+        }
     return {"status": "ready", "service": "scheduling-service"}

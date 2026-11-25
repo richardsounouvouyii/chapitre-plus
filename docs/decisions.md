@@ -28,10 +28,30 @@ Périmètre validé produit : `3e`, `Terminale C`, `Terminale D`. Hors périmèt
 
 Matière littéraire liée aux séries A/L : **retirée** des mocks formateurs tant que seules C·D sont ouvertes. Réintroduire avec le référentiel catalog (séries littéraires) si le produit l’étend.
 
+## 2026-11-21 — Scheduling MVP (phase 3 API)
+
+- Publication payante uniquement si formateur APPROVED + tarif `APPROVED` (admin).
+- Chevauchement formateur rejeté (409) sur séances actives.
+- Alerte DLQ trainer : `ChapitreTrainerDifficultySubmittedDlqNotEmpty` (RabbitMQ Prometheus :15692).
+
+## 2026-11-21 — Difficulty + Trainer (phase 2 API)
+
+- Difficulty : états cahier uniquement ; outbox sans description nominative.
+- Trainer : validation admin obligatoire avant offre ; inbox projections difficultés compatibles.
+- JWT tests : forçage `os.environ[...]` (pas `setdefault`) — `docs/jwt-testing.md`.
+
+## 2026-11-21 — Catalog référentiels MVP
+
+- Tables : `levels`, `subjects`, `level_subjects`, `chapters`, `notions` (base `chapitre_catalog`).
+- Classes = codes `3e` / `Terminale C` / `Terminale D` (pas de table séries séparée pour le MVP).
+- API lecture publique + seed ; CRUD admin sous JWT Identity (`roles` ⊇ `ADMIN`) + `audit_log` local (RG-12).
+- Gateway : `/api/v1/catalog/*` → catalog-service (Authorization transmis).
+- Smoke : `python -m scripts.smoke_gateway_catalog` après alembic + seed.
+
 ## À faire — phases suivantes (validé, pas encore codé)
 
-1. **Phase Identity+Catalog** : le front consomme `GET /levels` (catalog-service) et retire le miroir `curriculumLevels.ts` / `SUPPORTED_LEVELS` local.
-2. **Phase Scheduling (3)** : rejeter toute création de séance dont `level` ∉ `SUPPORTED_LEVELS` ; journaliser dans `audit_log` local.
+1. **Front** : consommer `GET /api/v1/catalog/levels` et matières ; retirer miroirs `curriculumLevels.ts` / `subjects.ts` quand branché.
+2. **Phase Scheduling (3)** : rejeter toute création de séance dont `level` ∉ niveaux catalog ; journaliser dans `audit_log` local.
 
 ## 2026-11-20 — Comptes : élève self-service, autres via admin
 
@@ -104,3 +124,34 @@ Le layout partagé (`AppShell` / sidebar) reste commun ; le **contenu métier** 
 - **Établissement** (facultatif) : select filtré par ville + « Autre… » (texte libre).
 - L’établissement **ne limite pas** le lieu des séances : le catalogue affiche toujours le quartier (ex. Abomey-Calavi) et le filtre ville reste la source de vérité pour Cotonou vs Calavi.
 - Plus tard : préfiltre catalogue / zones préférées via Identity + Scheduling.
+
+## 2026-11-20 — Identity étape schéma (users + rôles)
+
+- Un rôle principal par ligne `user_roles` (`STUDENT` | `TRAINER` | `PARENT` | `ADMIN`) ; multi-rôles possibles via plusieurs lignes, `CENTER_MANAGER` hors MVP.
+- Profil élève dans `student_profiles` (classe = code catalog texte, **pas** de FK inter-base).
+- Lien parent/enfant + consentements Identity + `audit_log` local RG-12.
+
+## 2026-11-20 — Identity auth (Argon2 + JWT courts + invitations)
+
+- Mots de passe : **Argon2** (`argon2-cffi`).
+- Access JWT HS256, TTL défaut **15 min** (`IDENTITY_JWT_ACCESS_TTL_MINUTES`).
+- Élève : `POST /auth/register` self-service.
+- Formateur / Parent / Admin : `POST /auth/invitations` (ADMIN) → user `PENDING_PASSWORD` ; outbox `identity.user.invited.v1` ; e-mail via notification consumer.
+- Jeton invitation : `token_ciphertext` Fernet au repos + claim interne — **jamais** en clair dans RabbitMQ / API. Prod : clé via KMS.
+- Inbox notification : table Postgres `inbox_events` (plus de set mémoire).
+- Premier admin : script `python -m scripts.seed_admin` (pas d’invitation circulaire).
+- Gateway : rate-limit login + métrique `gateway_login_rate_limited_total` ; Prometheus/Alertmanager via `infra/docker-compose.observability.yml` (profil `observability`).
+
+## 2026-11-25 — Formateur propose / admin valide (disponibilités & lieux)
+
+Décision produit (front mock formateur, alignée cahier) :
+
+| Domaine | Formateur | Admin |
+| --- | --- | --- |
+| Classes & matières (MVP : 3e / Terminale C·D ; Maths / Physique / Chimie) | Déclare dans le dossier | Approuve le dossier / statut |
+| Jours & créneaux (disponibilités) | Définit son calendrier | Ne choisit pas les heures à sa place |
+| Lieu d’une séance | Choisit parmi les **lieux référencés** (centres) | Valide séance + tarif ; gère les centres |
+| Domicile | Hors MVP actif | Protocole mineurs |
+| Tarif | Propose | Approuve avant publication payante |
+
+Conséquences d’implémentation : disponibilités → `trainer-service` (mock front d’abord) ; lieux + séances → `scheduling-service` ; ne pas confondre dossier compétences et calendrier.

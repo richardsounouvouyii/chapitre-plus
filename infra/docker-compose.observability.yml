@@ -1,0 +1,43 @@
+# Observabilité optionnelle — ne démarre pas avec le compose principal.
+# Usage (PowerShell) :
+#   cd infra
+#   docker compose -f docker-compose.yml -f docker-compose.observability.yml --profile observability up -d
+#
+# Prérequis : gateway exposée sur l'hôte :8000 (GET /metrics).
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    container_name: chapitre-prometheus
+    profiles: ["observability"]
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./observability/alerts:/etc/prometheus/alerts:ro
+      - chapitre_prometheus_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    depends_on:
+      - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: chapitre-alertmanager
+    profiles: ["observability"]
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./observability/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - chapitre_alertmanager_data:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+
+volumes:
+  chapitre_prometheus_data:
+  chapitre_alertmanager_data:

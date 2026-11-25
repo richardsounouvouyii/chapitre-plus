@@ -28,11 +28,11 @@ export function StatusBadge({
   return (
     <span
       className={cn(
-        'badge font-medium',
+        'badge h-auto min-h-0 border-0 font-medium leading-tight',
         VARIANTS[variant],
-        size === 'xs' && 'badge-xs',
-        size === 'sm' && 'badge-sm',
-        size === 'md' && 'badge-md',
+        size === 'xs' && 'px-2 py-1 text-[10px]',
+        size === 'sm' && 'px-2.5 py-1.5 text-xs',
+        size === 'md' && 'px-3 py-2 text-sm',
         className,
       )}
     >

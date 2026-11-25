@@ -1,0 +1,18 @@
+# Règles Prometheus — gateway CHAPITRE+
+# Brancher sur Prometheus / Alertmanager (phase déploiement).
+
+groups:
+  - name: chapitre-gateway
+    rules:
+      - alert: ChapitreGatewayLoginRateLimited
+        expr: increase(gateway_login_rate_limited_total[5m]) > 20
+        for: 2m
+        labels:
+          severity: warning
+          service: gateway
+        annotations:
+          summary: "Pics de rate-limit login sur la gateway"
+          description: >-
+            Plus de 20 rejets rate-limit login en 5 minutes
+            (possible bruteforce ou credential stuffing).
+          runbook: "Vérifier /metrics, IPs sources, logs identity-service."

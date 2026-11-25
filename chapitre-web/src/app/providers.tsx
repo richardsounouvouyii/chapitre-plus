@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState, type ReactNode } from 'react'
 import { ToastProvider, ToastViewport } from '@/components/ui'
+import { AuthSessionProvider } from '@/features/auth/AuthSessionProvider'
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -18,10 +19,12 @@ export function AppProviders({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        {children}
-        <ToastViewport />
-      </ToastProvider>
+      <AuthSessionProvider>
+        <ToastProvider>
+          {children}
+          <ToastViewport />
+        </ToastProvider>
+      </AuthSessionProvider>
     </QueryClientProvider>
   )
 }

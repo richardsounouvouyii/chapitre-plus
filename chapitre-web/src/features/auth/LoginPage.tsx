@@ -12,12 +12,18 @@ import {
   readStudentMockSession,
   writeStudentMockSession,
 } from '@/features/student/studentSession'
+import { ensureDemoTrainerAvailability } from '@/features/trainer/trainerAvailability'
+import {
+  ensureDemoTrainerProfile,
+  trainerDisplayName,
+} from '@/features/trainer/trainerProfile'
 import {
   DEMO_CREDENTIALS,
   DEMO_ROLE_ENTRIES,
   DEMO_ROLE_HOME,
   demoRoleLabel,
 } from './demoAuth'
+import { writeDemoAuthSession } from './demoSession'
 
 const schema = z.object({
   email: z.string().email('E-mail invalide'),
@@ -106,9 +112,9 @@ export function LoginPage() {
   }
 
   const onSubmit = (values: FormValues) => {
+    const email = values.email || registerState?.email || DEMO_CREDENTIALS[demoRole].email
     if (demoRole === ROLES.STUDENT) {
       const existing = readStudentMockSession()
-      const email = values.email || registerState?.email || existing.email || ''
       const cameFromRegister = Boolean(registerState?.fromRegister)
       if (!cameFromRegister && !existing.firstName && !existing.lastName) {
         ensureDemoStudentProfile(email || DEMO_CREDENTIALS.STUDENT.email)
@@ -128,6 +134,24 @@ export function LoginPage() {
           registeredAt: existing.registeredAt ?? new Date().toISOString(),
         })
       }
+      const student = readStudentMockSession()
+      writeDemoAuthSession({
+        role: ROLES.STUDENT,
+        email: student.email || email,
+        displayName: [student.firstName, student.lastName].filter(Boolean).join(' ') || undefined,
+      })
+    } else if (demoRole === ROLES.TRAINER) {
+      const trainer = ensureDemoTrainerProfile(
+        email || DEMO_CREDENTIALS.TRAINER.email,
+      )
+      ensureDemoTrainerAvailability(trainer.email)
+      writeDemoAuthSession({
+        role: ROLES.TRAINER,
+        email: trainer.email,
+        displayName: trainerDisplayName(trainer),
+      })
+    } else {
+      writeDemoAuthSession({ role: demoRole, email })
     }
     const redirectTo =
       demoRole === ROLES.STUDENT &&

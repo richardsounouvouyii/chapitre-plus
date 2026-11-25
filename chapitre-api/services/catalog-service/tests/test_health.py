@@ -6,14 +6,10 @@ client = TestClient(app)
 
 
 def test_health() -> None:
-    response = client.get("/health")
-    assert response.status_code == 200
-    body = response.json()
-    assert body["status"] == "ok"
+    assert client.get("/health").json()["status"] == "ok"
+
+
+def test_ready_shape() -> None:
+    body = client.get("/ready").json()
     assert body["service"] == "catalog-service"
-
-
-def test_ready() -> None:
-    response = client.get("/ready")
-    assert response.status_code == 200
-    assert response.json()["status"] == "ready"
+    assert body["status"] in {"ready", "not_ready"}

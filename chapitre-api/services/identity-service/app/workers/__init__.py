@@ -1,0 +1,1 @@
+"""Workers Identity (outbox publisher)."""

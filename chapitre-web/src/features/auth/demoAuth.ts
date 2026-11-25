@@ -15,7 +15,7 @@ export const DEMO_CREDENTIALS: Record<Role, { email: string; password: string }>
 
 export const DEMO_ROLE_ENTRIES: { role: Role; hint: string }[] = [
   { role: ROLES.STUDENT, hint: 'Demandes, séances, ressources' },
-  { role: ROLES.TRAINER, hint: 'Profil, séances, documents' },
+  { role: ROLES.TRAINER, hint: 'Dossier, statut, séances, documents' },
   { role: ROLES.PARENT, hint: 'Enfants, autorisations, paiements' },
   { role: ROLES.ADMIN, hint: 'Validation, tarifs, audit' },
 ]

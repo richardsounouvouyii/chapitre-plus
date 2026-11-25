@@ -25,3 +25,14 @@ src/
 ```
 
 Les mocks seront remplacés quand Identity / Catalog / Scheduling seront prêts.
+
+**Prochaine phase** proposée.
+7. **Recommandations** (toujours, même si non implémentées tout de suite) — au minimum 3 pistes parmi :
+   - technique (perf, schéma API, versioning, cache, indexes, circuit-breaker) ;
+   - architecture (nouveau consumer, projection, découpage futur, contrat d'événement) ;
+   - sécurité / mineurs / audit ;
+   - observabilité (logs, métriques, traces, alertes DLQ) ;
+   - produit / UX (écran manquant, empty state, accessibilité) ;
+   - dette et risques si on reporte.
+
+Les recommandations de fin de phase complètent (sans remplacer) la règle « Recommandations obligatoires » de chaque échange. Toujours des **suggestions à valider**, jamais des implémentations automatiques.

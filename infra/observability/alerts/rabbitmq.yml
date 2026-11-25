@@ -1,0 +1,20 @@
+# Règles Prometheus — RabbitMQ CHAPITRE+ (plugin rabbitmq_prometheus)
+# Métrique : rabbitmq_queue_messages{queue="…"}
+
+groups:
+  - name: chapitre-rabbitmq
+    rules:
+      - alert: ChapitreTrainerDifficultySubmittedDlqNotEmpty
+        expr: rabbitmq_queue_messages{queue="chapitre.trainer.difficulty.submitted.dlq"} > 0
+        for: 2m
+        labels:
+          severity: warning
+          service: trainer-service
+        annotations:
+          summary: "Messages dans la DLQ difficulty.submitted (trainer)"
+          description: >-
+            La file chapitre.trainer.difficulty.submitted.dlq contient des messages
+            depuis plus de 2 minutes (poison / erreur inbox).
+          runbook: >-
+            Inspecter la DLQ via management UI :15673, rejouer après correction,
+            vérifier logs app.workers.difficulty_inbox_consumer.

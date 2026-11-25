@@ -1,6 +1,7 @@
 import { CalendarDays, GraduationCap, Home, UserRound } from 'lucide-react'
 import { useLayoutEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import { useAuthSession } from '@/features/auth/AuthSessionProvider'
 import { cn } from '@/lib/utils'
 import { isPublicAccountPath, PUBLIC_MOBILE_NAV } from './publicNav'
 import { scrollPublicToTop } from './scrollPublicToTop'
@@ -19,6 +20,7 @@ const ICONS = {
 export function PublicMobileNav() {
   const navRef = useRef<HTMLElement>(null)
   const { pathname } = useLocation()
+  const { session: activeSession } = useAuthSession()
 
   useLayoutEffect(() => {
     const node = navRef.current
@@ -47,16 +49,22 @@ export function PublicMobileNav() {
       <ul className="mx-auto grid max-w-lg grid-cols-4 gap-1 px-2 py-1.5">
         {PUBLIC_MOBILE_NAV.map(({ to, label, end }) => {
           const Icon = ICONS[to]
+          const isAccount = to === '/connexion'
+          const target = isAccount && activeSession ? activeSession.homePath : to
+          const itemLabel = isAccount && activeSession ? 'Espace' : label
           return (
             <li key={to}>
               <NavLink
-                to={to}
+                to={target}
                 end={end}
-                aria-label={label}
+                aria-label={itemLabel}
                 onClick={() => scrollPublicToTop()}
                 className={({ isActive }) => {
-                  const active =
-                    to === '/connexion' ? isPublicAccountPath(pathname) : isActive
+                  const active = isAccount
+                    ? activeSession
+                      ? pathname.startsWith('/dashboard/')
+                      : isPublicAccountPath(pathname)
+                    : isActive
                   return cn(
                     'flex w-full flex-col items-center gap-0.5 rounded-xl px-1 py-2 text-[11px] font-semibold transition-colors',
                     active
@@ -66,8 +74,11 @@ export function PublicMobileNav() {
                 }}
               >
                 {({ isActive }) => {
-                  const active =
-                    to === '/connexion' ? isPublicAccountPath(pathname) : isActive
+                  const active = isAccount
+                    ? activeSession
+                      ? pathname.startsWith('/dashboard/')
+                      : isPublicAccountPath(pathname)
+                    : isActive
                   return (
                     <>
                       <Icon
@@ -75,7 +86,7 @@ export function PublicMobileNav() {
                         aria-hidden
                         strokeWidth={active ? 2.5 : 2}
                       />
-                      <span>{label}</span>
+                      <span>{itemLabel}</span>
                       <span
                         className={cn(
                           'mt-0.5 h-0.5 w-5 rounded-full',

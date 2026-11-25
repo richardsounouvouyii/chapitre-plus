@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { ConnectedAsBanner } from './ConnectedAsBanner'
 import { PublicFooter } from './PublicFooter'
 import { PublicHeader } from './PublicHeader'
 import { PublicMobileNav } from './PublicMobileNav'
@@ -20,6 +21,7 @@ export function PublicLayout() {
   return (
     <div className="flex min-h-dvh flex-col">
       <PublicHeader />
+      <ConnectedAsBanner />
       <main className="flex-1">
         <Outlet />
       </main>

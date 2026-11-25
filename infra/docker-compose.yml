@@ -9,7 +9,8 @@ services:
       POSTGRES_PASSWORD: chapitre_dev_change_me
       POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      # 5433 hôte : évite le conflit avec d'autres Postgres locaux (souvent déjà sur 5432)
+      - "5433:5432"
     volumes:
       - chapitre_pg_data:/var/lib/postgresql/data
       - ./postgres/init-databases.sql:/docker-entrypoint-initdb.d/01-init-databases.sql:ro
@@ -29,8 +30,11 @@ services:
       # Hôtes 5673/15673 pour éviter le conflit avec d'autres stacks locales (ex. 5672 déjà pris)
       - "5673:5672"
       - "15673:15672"
+      # Métriques Prometheus (plugin rabbitmq_prometheus)
+      - "15692:15692"
     volumes:
       - chapitre_rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 5s
