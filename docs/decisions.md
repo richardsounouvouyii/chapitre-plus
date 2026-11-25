@@ -142,6 +142,12 @@ Le layout partagé (`AppShell` / sidebar) reste commun ; le **contenu métier** 
 - Premier admin : script `python -m scripts.seed_admin` (pas d’invitation circulaire).
 - Gateway : rate-limit login + métrique `gateway_login_rate_limited_total` ; Prometheus/Alertmanager via `infra/docker-compose.observability.yml` (profil `observability`).
 
+## 2026-11-25 — Secrets hors dépôt (déploiement)
+
+- `.env` réel gitignoré (`.env`, `.env.*`, sauf `.env.example`).
+- `.env.example` = placeholders DEV uniquement ; prod = secrets injectés (hébergeur / KMS), jamais commités.
+- Logs locaux `.run-*.err` / `.run-*.log` exclus du dépôt.
+
 ## 2026-11-25 — Formateur propose / admin valide (disponibilités & lieux)
 
 Décision produit (front mock formateur, alignée cahier) :

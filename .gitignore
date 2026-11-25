@@ -1,7 +1,13 @@
-# Environnement
+# Environnement — secrets locaux / prod (ne jamais committer)
 .env
+.env.*
+!.env.example
 .env.local
+.env.*.local
 *.pem
+*.key
+secrets/
+**/credentials.json
 
 # Python
 __pycache__/
@@ -31,6 +37,11 @@ Thumbs.db
 # Docker / data
 infra/postgres/data/
 *.log
+
+# Logs locaux de run (uvicorn / smoke)
+.run-*.err
+.run-*.log
+.run-*.out
 
 # Stockage local dev
 storage/
