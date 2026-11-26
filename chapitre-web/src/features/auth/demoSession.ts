@@ -7,6 +7,8 @@ import {
 } from '@/features/student/studentSession'
 import { clearTrainerAvailability } from '@/features/trainer/trainerAvailability'
 import { clearTrainerMockProfile } from '@/features/trainer/trainerProfile'
+import { clearTrainerResources } from '@/features/trainer/trainerResources'
+import { clearTrainerSessions } from '@/features/trainer/trainerSessions'
 import { ROLE_LABELS, ROLES, type Role } from '@/lib/roles'
 import { notifyAuthSessionChanged } from './authSessionEvents'
 import { DEMO_CREDENTIALS } from './demoAuth'
@@ -66,7 +68,14 @@ export function writeDemoAuthSession(input: {
   if (input.role !== ROLES.STUDENT) {
     clearStudentMockSession()
   }
-  if (input.role !== ROLES.TRAINER) {
+  // ADMIN conserve séances/supports pour approuver les tarifs sans API.
+  if (input.role !== ROLES.TRAINER && input.role !== ROLES.ADMIN) {
+    clearTrainerMockProfile()
+    clearTrainerAvailability()
+    clearTrainerSessions()
+    clearTrainerResources()
+  }
+  if (input.role === ROLES.ADMIN) {
     clearTrainerMockProfile()
     clearTrainerAvailability()
   }
@@ -81,6 +90,8 @@ export function clearDemoAuthSession(): void {
   clearStudentMockSession()
   clearTrainerMockProfile()
   clearTrainerAvailability()
+  clearTrainerSessions()
+  clearTrainerResources()
   notifyAuthSessionChanged()
 }
 

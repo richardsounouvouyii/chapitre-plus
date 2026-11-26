@@ -17,6 +17,8 @@ import {
   ensureDemoTrainerProfile,
   trainerDisplayName,
 } from '@/features/trainer/trainerProfile'
+import { ensureDemoTrainerResources } from '@/features/trainer/trainerResources'
+import { ensureDemoTrainerSessions } from '@/features/trainer/trainerSessions'
 import {
   DEMO_CREDENTIALS,
   DEMO_ROLE_ENTRIES,
@@ -145,11 +147,18 @@ export function LoginPage() {
         email || DEMO_CREDENTIALS.TRAINER.email,
       )
       ensureDemoTrainerAvailability(trainer.email)
+      ensureDemoTrainerSessions(trainer.email)
+      ensureDemoTrainerResources(trainer.email)
       writeDemoAuthSession({
         role: ROLES.TRAINER,
         email: trainer.email,
         displayName: trainerDisplayName(trainer),
       })
+    } else if (demoRole === ROLES.ADMIN) {
+      const trainerEmail = DEMO_CREDENTIALS.TRAINER.email
+      ensureDemoTrainerSessions(trainerEmail)
+      ensureDemoTrainerResources(trainerEmail)
+      writeDemoAuthSession({ role: ROLES.ADMIN, email })
     } else {
       writeDemoAuthSession({ role: demoRole, email })
     }

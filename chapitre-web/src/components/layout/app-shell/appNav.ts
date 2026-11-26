@@ -42,9 +42,14 @@ export const TRAINER_PATHS = {
   dossier: '/dashboard/formateur/dossier',
   disponibilites: '/dashboard/formateur/disponibilites',
   seances: '/dashboard/formateur/seances',
+  seancesNouvelle: '/dashboard/formateur/seances/nouvelle',
   documents: '/dashboard/formateur/documents',
   profil: '/dashboard/formateur/profil',
 } as const
+
+export function trainerSessionPath(sessionId: string): string {
+  return `${TRAINER_PATHS.seances}/${sessionId}`
+}
 
 export const PARENT_PATHS = {
   home: '/dashboard/parent',

@@ -5,6 +5,7 @@ import { PublicLayout } from '@/components/layout/PublicLayout'
 import { DismissToastsOnNavigate } from '@/components/ui'
 import { AdminDashboard } from '@/features/admin/AdminDashboard'
 import { AdminPlaceholderPage } from '@/features/admin/AdminPlaceholderPage'
+import { AdminSessionsPage } from '@/features/admin/AdminSessionsPage'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { RegisterPage } from '@/features/auth/RegisterPage'
 import { ParentDashboard } from '@/features/parent/ParentDashboard'
@@ -28,7 +29,10 @@ import { RoleProfilePage } from '@/features/shared/RoleProfilePage'
 import { TrainerAvailabilityPage } from '@/features/trainer/TrainerAvailabilityPage'
 import { TrainerDashboard } from '@/features/trainer/TrainerDashboard'
 import { TrainerDossierPage } from '@/features/trainer/TrainerDossierPage'
-import { TrainerPlaceholderPage } from '@/features/trainer/TrainerPlaceholderPage'
+import { TrainerDocumentsPage } from '@/features/trainer/TrainerDocumentsPage'
+import { TrainerSessionCreatePage } from '@/features/trainer/TrainerSessionCreatePage'
+import { TrainerSessionDetailPage } from '@/features/trainer/TrainerSessionDetailPage'
+import { TrainerSessionsPage } from '@/features/trainer/TrainerSessionsPage'
 import { ROLES } from '@/lib/roles'
 
 export function AppRouter() {
@@ -99,24 +103,10 @@ export function AppRouter() {
           <Route index element={<TrainerDashboard />} />
           <Route path="dossier" element={<TrainerDossierPage />} />
           <Route path="disponibilites" element={<TrainerAvailabilityPage />} />
-          <Route
-            path="seances"
-            element={
-              <TrainerPlaceholderPage
-                title="Séances formateur"
-                description="Création et suivi des séances en présentiel (lieux catalogue + tarif admin)."
-              />
-            }
-          />
-          <Route
-            path="documents"
-            element={
-              <TrainerPlaceholderPage
-                title="Supports"
-                description="Import PDF / images pour les élèves inscrits (pas d’upload élève)."
-              />
-            }
-          />
+          <Route path="seances" element={<TrainerSessionsPage />} />
+          <Route path="seances/nouvelle" element={<TrainerSessionCreatePage />} />
+          <Route path="seances/:sessionId" element={<TrainerSessionDetailPage />} />
+          <Route path="documents" element={<TrainerDocumentsPage />} />
           <Route
             path="profil"
             element={
@@ -186,15 +176,7 @@ export function AppRouter() {
               />
             }
           />
-          <Route
-            path="seances"
-            element={
-              <AdminPlaceholderPage
-                title="Séances admin"
-                description="Approbation des tarifs et supervision des séances publiées."
-              />
-            }
-          />
+          <Route path="seances" element={<AdminSessionsPage />} />
           <Route
             path="profil"
             element={
